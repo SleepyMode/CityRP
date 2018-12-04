@@ -1,0 +1,7 @@
+"cityrp"
+{
+	"base"		"base"
+	"title"		"CityRP"
+	"author"	"Zoephix & SleepyMode"
+	"menusystem"	"1"
+}
