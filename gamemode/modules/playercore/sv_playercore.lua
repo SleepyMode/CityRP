@@ -23,11 +23,13 @@ end
 function PLAYER:GiveItem(id, quantity, data)
 	quantity = quantity or 1
 
+	self.rpInventoryData = self.rpInventoryData[id] or {}
+
 	if (GM:GetItemData(id, "stackable")) then
 		local quantityLeft = quantity
 		local stackSize = GM:GetItemData(id, "stacksize")
 
-		if (type(self.rpInventoryData[id]) == "table" and #self.rpInventoryData[id]) then
+		if (#self.rpInventoryData[id] > 0) then
 			for k, v in pairs(self.rpInventoryData[id]) do
 				if (v.quantity == stackSize) then
 					continue
@@ -67,7 +69,11 @@ function PLAYER:GiveItem(id, quantity, data)
 end
 
 function PLAYER:HasItem(id)
-	-- TODO
+	return (type(self.rpInventoryData[id]) == "table" and #self.rpInventoryData[id] > 0)
+end
+
+function PLAYER:CountItems(id)
+	return (type(self.rpInventoryData[id]) == "table") and #self.rpInventoryData[id] or 0
 end
 
 function PLAYER:GetItems(id)
