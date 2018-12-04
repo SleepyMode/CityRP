@@ -90,6 +90,9 @@ net.Receive("cityrp_clsv_inventoryaction", function(len, ply)
 
 		if (!ply:Alive()) then
 			ply:Notify("You may not peform inventory actions whilst dead!")
+			return
+		elseif (!ply:OnGround and !ply:IsFlagSet(FL_INWATER)) then
+			ply:Notify("You may not manipulate items while airborne.")
 		end
 
 		if (action == GM.InventoryActions.ACTION_DROP) then
@@ -111,7 +114,8 @@ net.Receive("cityrp_clsv_inventoryaction", function(len, ply)
 			if (storage) then
 				-- TODO: Run checks & move to storage
 			else
-				-- 
+				-- Disallow, for now.
+				ply:Notify("This action is not currently supported.")
 			end
 		elseif (action == GM.InventoryActions.ACTION_USE) then
 			local itemID = net.ReadInt()
@@ -119,8 +123,6 @@ net.Receive("cityrp_clsv_inventoryaction", function(len, ply)
 
 			if (hook.Run("PlayerCanUseItem", ply, itemData) == false) then
 				ply:Notify("You may not use this item.")
-			elseif (!ply:OnGround()) then
-				ply:Notify("You must be grounded to use this item.")
 			else
 				-- TODO: Use the item
 				if (GM:GetItemData(itemID, "usable")) then
