@@ -8,7 +8,7 @@ GM.Inventory = {}
 --[[-------------------------------------------------------------------------
 Networking Receivers
 ---------------------------------------------------------------------------]]
-net.Receive("cityrp_svcl_opennamedmenu", function(len)
+net.Receive("cityrp_svcl_opencharcreation", function(len)
 	createNamedMenu(net.ReadString())
 end)
 
