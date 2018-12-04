@@ -10,6 +10,10 @@ local baseItem = {
 	color = Color(125, 125, 125, 185),
 	illegal = false,
 	price = 10,
+	stackable = false,
+	stacksize = 1,
+	onetime = false,
+	usable = true,
 
 	OnUse = function(self, ply, data) end,
 	OnDrop = function(self, ply, pos) end,
@@ -22,8 +26,28 @@ function GM:ItemExists(id)
 	return (ITEM_DATABASE[id] != nil)
 end
 
-function GM:GetItemData(id)
+function GM:GetItem(id)
 	return ITEM_DATABASE[id]
+end
+
+function GM:GetItemData(id, key)
+	return ITEM_DATABASE[id][key]
+end
+
+--[[-------------------------------------------------------------------------
+Item utilities
+---------------------------------------------------------------------------]]
+function GM:CreateItemEntity(id, data, pos)
+	local ent = ents.Create("rp_item")
+	if (!IsValid(ent)) then return false end
+
+	ent:SetModel("models/error.mdl")
+	ent:SetPos(pos)
+	ent:Spawn()
+
+	ent:SetItem(id, data)
+
+	return ent
 end
 
 --[[-------------------------------------------------------------------------

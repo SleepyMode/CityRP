@@ -21,19 +21,81 @@ function PLAYER:Notify(message)
 	net.Send(self)
 end
 
+function PLAYER:GiveItem(id, quantity, data)
+	quantity = quantity or 1
+
+	if (GM:GetItemData(id, "stackable")) then
+		local quantityLeft = quantity
+		local stackSize = GM:GetItemData(id, "stacksize")
+
+		if (type(self.rpInventoryData[id]) == "table" and #self.rpInventoryData[id]) then
+			for k, v in pairs(self.rpInventoryData[id]) do
+				if (v.quantity == stackSize) then
+					continue
+				else
+					local diff = stackSize - v.quantity
+					quantityLeft = quantityLeft - diff
+
+					v.quantity = stackSize
+				end
+			end
+		end
+
+		if (quantityLeft > 0) then
+			for i=1, quantityLeft/stackSize do
+				table.insert(self.rpInventoryData[id], {
+					quantity = stackSize,
+					data = data
+				})
+			end
+
+			local remaining = quantityLeft % stackSize
+
+			if (remaining != 0) then
+				table.insert(self.rpInventoryData[id], {
+					quantity = remaining,
+					data = data
+				})
+			end
+		end
+	else
+		for i=1, quantity do
+			table.insert(self.rpInventoryData[id], {
+				data = data
+			})
+		end
+	end
+end
+
+function PLAYER:HasItem(id)
+	-- TODO
+end
+
+function PLAYER:GetItems(id)
+	return self.rpInventoryData[id]
+end
+
+function PLAYER:TakeItem(id, quantity)
+	-- quantity = quantity or 1
+
+	-- TODO
+end
+
 --[[-------------------------------------------------------------------------
 Networking Receivers
 ------------ ---------------------------------------------------------------]]
 net.Receive("cityrp_clsv_inventoryaction", function(len, ply)
 	if (IsValid(ply) and ply:HasCharacter())
 		local action = net.ReadInt()
-		local itemData = net.ReadTable()
 
 		if (!ply:Alive()) then
 			ply:Notify("You may not peform inventory actions whilst dead!")
 		end
 
 		if (action == GM.InventoryActions.ACTION_DROP) then
+			local itemID = net.ReadInt()
+			local itemData = net.ReadTable()
+
 			if (hook.Run("PlayerCanDropItem", ply, itemData) == false) then
 				ply:Notify("You cannot drop this item.")
 			elseif (itemData.gov) then
@@ -42,6 +104,8 @@ net.Receive("cityrp_clsv_inventoryaction", function(len, ply)
 				-- TODO: Drop the item
 			end
 		elseif (action == GM.InventoryActions.ACTION_TRANSFER) then
+			local itemID = net.ReadInt()
+			local itemData = net.ReadTable()
 			local storage = net.ReadBool()
 
 			if (storage) then
@@ -50,19 +114,33 @@ net.Receive("cityrp_clsv_inventoryaction", function(len, ply)
 				-- 
 			end
 		elseif (action == GM.InventoryActions.ACTION_USE) then
+			local itemID = net.ReadInt()
+			local itemData = net.ReadTable()
+
 			if (hook.Run("PlayerCanUseItem", ply, itemData) == false) then
 				ply:Notify("You may not use this item.")
 			elseif (!ply:OnGround()) then
-				ply:Notify("You may not use items when not on the ground")
+				ply:Notify("You must be grounded to use this item.")
 			else
 				-- TODO: Use the item
+				if (GM:GetItemData(itemID, "usable")) then
+					ITEM_DATABASE[itemID]:OnUse(ply, itemData)
+
+					if (GM:GetItemData(itemID, "onetime")) then
+						ply:TakeItem(itemID, 1)
+					end
+				else
+					--ply:Notify("This item is not usable.")
+				end
 			end
-		elseif (action == GM.InventoryActions.ACTION_PICKUP) then
-			if (hook.Run("PlayerCanPickupItem", ply, itemData) == false) then
-				ply:Notify("You may not pick up this item.")
-			else
-				-- TODO: Pickup the item
-			end
+--		elseif (action == GM.InventoryActions.ACTION_PICKUP) then
+--			local ent = net.ReadEntity()
+--
+--			if (hook.Run("PlayerCanPickupItem", ply, ent) == false) then
+--				ply:Notify("You may not pick up this item.")
+--			else
+--				ply:GiveItem(ent.rpItemID, 1, ent.rpItemData)
+--			end
 		elseif (action == GM.InventoryActions.ACTION_SELL) then
 			-- TODO
 		elseif (action == GM.InventoryActions.ACTION_BUY) then
@@ -108,6 +186,8 @@ hook.Add("PlayerInitialSpawn", "cityrp.playercore.PlayerInitialSpawn", function(
 					local inventoryData = {}
 					inventoryData["inventory"] = util.JSONToTable(result.inventory)
 					inventoryData["storage"] = util.JSONToTable(result.storage)
+
+					ply.rpInventoryData = inventoryData
 
 					net.Start("cityrp_svcl_updateinventory")
 						net.WriteTable(inventoryData)
