@@ -2,16 +2,15 @@
 local GM = GAMEMODE or GM
 
 util.AddNetworkString("cityrp_svcl_notify")
-util.AddNetworkString("cityrp_svcl_opennamedmenu")
+util.AddNetworkString("cityrp_svcl_opencharcreation")
 util.AddNetworkString("cityrp_svcl_updateinventory")
 util.AddNetworkString("cityrp_clsv_inventoryaction")
 
 --[[-------------------------------------------------------------------------
 Functions
 ---------------------------------------------------------------------------]]
-function PLAYER:OpenNamedMenu(name)
-	net.Start("cityrp_svcl_opennamedmenu")
-		net.WriteString(name)
+function PLAYER:OpenCreationMenu()
+	net.Start("cityrp_svcl_opencharcreation")
 	net.Send(self)
 end
 
@@ -196,7 +195,7 @@ hook.Add("PlayerInitialSpawn", "cityrp.playercore.PlayerInitialSpawn", function(
 					net.Send(ply)
 				else
 					ply:SetNW2Bool("cityrp_haschar", false)
-					ply:OpenNamedMenu("charcreate")
+					ply:OpenCreationMenu()
 				end
 			else
 				local time = math.floor(os.time())
@@ -218,7 +217,7 @@ hook.Add("PlayerInitialSpawn", "cityrp.playercore.PlayerInitialSpawn", function(
 				insertQuery:Execute()
 
 				-- Open the character creation menu
-				ply:OpenNamedMenu("charcreate")
+				ply:OpenCreationMenu()
 
 				ply:SetNW2Bool("cityrp_haschar", false)
 			end
