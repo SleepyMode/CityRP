@@ -1,0 +1,12 @@
+﻿root = true
+
+[*]
+end_of_file = crlf
+insert_final_newline = true
+charset = utf-8
+indent_style = tab
+indent_size = 4
+
+[cityrp.txt]
+indent_style = tab
+indent_size = 8
