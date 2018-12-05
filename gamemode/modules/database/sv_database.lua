@@ -24,6 +24,8 @@ function GM:DatabaseConnected()
 		query:Create("clothing", "INT(4) NOT NULL")
 		query:Create("inventory", "TEXT")
 		query:Create("storage", "TEXT")
+		query:Create("cash", "INT NOT NULL")
+		query:Create("bank", "INT NOT NULL")
 		query:PrimaryKey("id")
 	query:Execute()
 

@@ -225,6 +225,8 @@ hook.Add("PlayerInitialSpawn", "cityrp.playercore.PlayerInitialSpawn", function(
 					ply:SetNW2Bool("cityrp_female", not not result.gender)
 					ply:SetNW2Int("cityrp_face", result.face)
 					ply:SetNW2Int("cityrp_clothing", result.clothing)
+					ply:SetNW2Int("cityrp_cash", result.cash)
+					ply:SetNW2Int("cityrp_bank", result.bank)
 
 					ply:SetNW2Bool("cityrp_haschar", true)
 					
@@ -256,6 +258,8 @@ hook.Add("PlayerInitialSpawn", "cityrp.playercore.PlayerInitialSpawn", function(
 					insertQuery:Insert("clothing", 0)
 					insertQuery:Insert("inventory", "")
 					insertQuery:Insert("storage", "")
+					insertQuery:Insert("cash", 10000) -- Default amount of money for now, I guess.
+					insertQuery:Insert("bank", 25000) -- ""
 				insertQuery:Execute()
 
 				-- Open the character creation menu

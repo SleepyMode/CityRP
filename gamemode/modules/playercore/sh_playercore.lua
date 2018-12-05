@@ -71,3 +71,15 @@ end
 function PLAYER:GetPlaytime()
 	return self:GetNW2Float("cityrp_playtime")
 end
+
+function PLAYER:GetCash()
+	return self:GetNW2Int("cityrp_cash")
+end
+
+function PLAYER:GetBankMoney()
+	return self:GetNW2Int("cityrp_bank")
+end
+
+function PLAYER:GetMoney(bBank)
+	return bBank and self:GetNW2Int("cityrp_bank") or self:GetNW2Int("cityrp_cash")
+end
