@@ -66,6 +66,8 @@ function PLAYER:GiveItem(id, quantity, data)
 			})
 		end
 	end
+
+	ply:UpdateInventory()
 end
 
 function PLAYER:HasItem(id)
@@ -81,10 +83,44 @@ function PLAYER:GetItems(id)
 end
 
 function PLAYER:TakeItem(id, quantity)
-	-- quantity = quantity or 1
+	quantity = quantity or 1
 
-	-- TODO
+	if (self:CountItems(id) <= quantity) then
+		self.rpInventoryData[id] = {}
+	else
+		if (GM:GetItemData(id, "stackable")) then
+			local quantityLeft = quantity
+			local stackSize = GM:GetItemData(id, "stacksize")
+
+			if (#self.rpInventoryData[id] > 0) then
+				ArrayRemove(rp.inventoryData[id], function(t, i, j)
+					local v = t[i]
+
+					return quantityLeft < v.quantity 
+				end)
+			end
+		else
+			for i=1, quantity do
+				local count = #self.rpInventoryData[id]
+
+				if (count > 0) then
+					self.rpInventoryData[id][count] = nil
+				else
+					break
+				end
+			end
+		end
+	end
+
+	ply:UpdateInventory()
 end
+
+function PLAYER:UpdateInventory()
+	net.Start("cityrp_svcl_updateinventory")
+		net.WriteTable(self.rpInventoryData)
+	net.Send(self)
+end
+
 
 --[[-------------------------------------------------------------------------
 Networking Receivers
@@ -102,6 +138,7 @@ net.Receive("cityrp_clsv_inventoryaction", function(len, ply)
 
 		if (action == GM.InventoryActions.ACTION_DROP) then
 			local itemID = net.ReadInt()
+			local localID = net.ReadInt() -- The number of the item in the inventory
 			local itemData = net.ReadTable()
 
 			if (hook.Run("PlayerCanDropItem", ply, itemData) == false) then
@@ -109,7 +146,8 @@ net.Receive("cityrp_clsv_inventoryaction", function(len, ply)
 			elseif (itemData.gov) then
 				ply:Notify("You may not drop government-issued items.")
 			else
-				-- TODO: Drop the item
+				ply.rpInventoryData[itemID][localID] = nil
+				ply:UpdateInventory()
 			end
 		elseif (action == GM.InventoryActions.ACTION_TRANSFER) then
 			local itemID = net.ReadInt()
@@ -196,9 +234,7 @@ hook.Add("PlayerInitialSpawn", "cityrp.playercore.PlayerInitialSpawn", function(
 
 					ply.rpInventoryData = inventoryData
 
-					net.Start("cityrp_svcl_updateinventory")
-						net.WriteTable(inventoryData)
-					net.Send(ply)
+					ply:UpdateInventory()
 				else
 					ply:SetNW2Bool("cityrp_haschar", false)
 					ply:OpenCreationMenu()
