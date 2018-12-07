@@ -1,6 +1,6 @@
-hook.Add( "HUDShouldDraw", "hide hud", function( name )
-if ( name == "CHudHealth" or name == "CHudBattery" ) then
-return false
-end
 
-end )
+hook.Add("HUDShouldDraw", "cityrp.playergui.HUDShouldDraw", function(element)
+	if (element == "CHudHealth" or element == "CHudBattery") then
+		return false
+	end
+end)
