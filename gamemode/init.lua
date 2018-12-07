@@ -2,6 +2,8 @@
 -- Files which will be sent to the client
 AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("sh_init.lua")
+AddCSLuaFile("sh_playerfunctions.lua")
+AddCSLuaFile("cl_hud.lua")
 
 -- Include external serverside libs
 include("libs/sv_mysql.lua")
