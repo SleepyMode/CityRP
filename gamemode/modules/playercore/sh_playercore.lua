@@ -83,3 +83,13 @@ end
 function PLAYER:GetMoney(bBank)
 	return bBank and self:GetNW2Int("cityrp_bank") or self:GetNW2Int("cityrp_cash")
 end
+
+--[[-------------------------------------------------------------------------
+Hooks
+---------------------------------------------------------------------------]]
+hook.Add("PlayerSpawn", "cityrp.playercore.PlayerSpawn", function(ply)
+	if (IsValid(ply)) then
+		ply:SetWalkSpeed(135)
+		ply:SetRunSpeed(200)
+	end
+end)
