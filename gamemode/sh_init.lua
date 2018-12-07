@@ -29,16 +29,20 @@ local function loadModule(moduleName)
 		return
 	end
 
-	-- Get the shared module file
+	Msg("Loading module \"" .. moduleName .. "\" - ")
+
+	-- Module initialization path
 	local path = "cityrp/gamemode/modules/" .. moduleName .. "/sh_module.lua"
 
 	-- If it exists, include it and send it to the client
-	if (file.Exists("cityrp/gamemode/" .. path, "LUA")) then
+	if (file.Exists(path, "LUA")) then
 		AddCSLuaFile(path)
 		include(path)
 
 		loadedModules[moduleName] = true
 	end
+
+	MsgC(Color(0, 255, 0), "Done!\n")
 end
 
 -- Load a module
