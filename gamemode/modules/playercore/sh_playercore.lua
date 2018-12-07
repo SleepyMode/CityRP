@@ -52,6 +52,10 @@ function PLAYER:LastName()
 	return self:GetNW2String("cityrp_lastname") or "Doe"
 end
 
+function PLAYER:GetRPName()
+	return self:FirstName() .. self:LastName()
+end
+
 function PLAYER:IsFemale()
 	return self:GetNW2Bool("cityrp_female")
 end
