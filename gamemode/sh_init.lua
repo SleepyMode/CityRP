@@ -13,6 +13,9 @@ Module Library
 
 local loadedModules = {}
 local noLoadModules = {
+	-- IMPORTANT:
+	-- Uncomment the dev module once server is released
+	-- as it disables join access for most people!
 	--["dev"] = true
 }
 
