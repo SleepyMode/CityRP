@@ -66,6 +66,26 @@ function GM:RegisterChatType(name, data)
 	end
 end
 
+function GM:ParseChatType(message)
+	local chatType, msg
+
+	for k, v in pairs(self.ChatTypes) do
+		for _, prefix in (v.prefix) do
+			if (string.sub(string.lower(message), 0, string.len(prefix)) == prefix) then
+				chatType = k
+				msg = string.sub(message, string.len(prefix))
+			end
+		end
+	end
+
+	if (!chatType) then
+		chatType = "Local"
+		msg = message
+	end
+
+	return chatType, msg
+end
+
 --[[-------------------------------------------------------------------------
 Chat Type Registration
 ---------------------------------------------------------------------------]]
