@@ -126,7 +126,7 @@ end
 Networking Receivers
 ------------ ---------------------------------------------------------------]]
 net.Receive("cityrp_clsv_inventoryaction", function(len, ply)
-	if (IsValid(ply) and ply:HasCharacter())
+	if (IsValid(ply) and ply:HasCharacter()) then
 		local action = net.ReadInt()
 
 		if (!ply:Alive()) then
@@ -135,6 +135,9 @@ net.Receive("cityrp_clsv_inventoryaction", function(len, ply)
 		elseif (!ply:OnGround and !ply:IsFlagSet(FL_INWATER)) then
 			ply:Notify("You may not manipulate items while airborne.")
 		end
+	end
+end)
+
 
 		if (action == GM.InventoryActions.ACTION_DROP) then
 			local itemID = net.ReadInt()
