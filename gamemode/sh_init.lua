@@ -30,10 +30,10 @@ local function loadModule(moduleName)
 	end
 
 	-- Get the shared module file
-	local path = "modules/" .. moduleName .. "/sh_module.lua"
+	local path = "cityrp/gamemode/modules/" .. moduleName .. "/sh_module.lua"
 
 	-- If it exists, include it and send it to the client
-	if (file.Exists("gamemode/" .. path, "LUA")) then
+	if (file.Exists("cityrp/gamemode/" .. path, "LUA")) then
 		AddCSLuaFile(path)
 		include(path)
 
@@ -50,7 +50,7 @@ end
 
 -- Loads all modules
 function LoadModules()
-	local files, folders = file.Find("gamemode/modules/", "LUA")
+	local files, folders = file.Find("cityrp/gamemode/modules/", "LUA")
 
 	for k, v in pairs(files) do
 		LoadModule(v)
