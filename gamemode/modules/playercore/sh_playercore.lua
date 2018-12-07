@@ -36,12 +36,10 @@ team.SetUp(TEAM_MAYOR,		"Mayor",			Color(150,	20,		20,		0  ))
 --[[-------------------------------------------------------------------------
 Networked variables
 ---------------------------------------------------------------------------]]
+local PLAYER.SteamName = PLAYER.SteamName or PLAYER.Name
+
 function PLAYER:HasCharacter()
 	return self:GetNW2Bool("cityrp_haschar")
-end
-
-function PLAYER:SteamName()
-	return self:Name()
 end
 
 function PLAYER:FirstName()
@@ -54,6 +52,14 @@ end
 
 function PLAYER:GetRPName()
 	return self:FirstName() .. self:LastName()
+end
+
+function PLAYER:Name()
+	return self:HasCharacter() and self:GetRPName() or self:SteamName()
+end
+
+function PLAYER:Nick()
+	return self:Name()
 end
 
 function PLAYER:IsFemale()
