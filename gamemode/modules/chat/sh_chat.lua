@@ -3,6 +3,9 @@ local GM = GAMEMODE or GM
 
 GM.ChatTypes = {}
 
+--[[-------------------------------------------------------------------------
+Functions
+---------------------------------------------------------------------------]]
 function GM:RegisterChatType(name, data)
 	if (GM.ChatTypes[name] == nil) then
 		if (type(data.canUse) != "function") then
@@ -25,8 +28,23 @@ function GM:RegisterChatType(name, data)
 			end
 		end
 
-		if (type(data.canSee) != "function") then
-			if (data.)
+		if (data.canSee != nil) then
+			if (type(data.canSee) == "number") then
+				local dist = data.canSee * data.canSee
+
+				data.canSee = function(self, listener, speaker)
+					return (speaker:GetPos() - listener:GetPos()):LengthSqr() <= dist
+				end
+			end
+		else
+			if (data.inCharacter) then
+				data.canSee = function(self, listener, speaker)
+					return (speaker:GetPos() - listener:GetPos()):LengthSqr() <= 78400
+				end
+			else
+				data.canSee = function(self, listener, speaker)
+					return true
+				end
 			end
 		end
 
@@ -41,7 +59,44 @@ function GM:RegisterChatType(name, data)
 				end
 			end
 		end
+
+		GM.ChatTypes[name] = data
 	else
 		WarningMessage("[CityRP] Attempted to register chat type duplicate %s!", name)
 	end
 end
+
+--[[-------------------------------------------------------------------------
+Chat Type Registration
+---------------------------------------------------------------------------]]
+GM:RegisterChatType("Local", {
+	prefix = {"/local"},
+	canSee = 78400,
+	inCharacter = true,
+	color = Color(175, 200, 200)
+})
+
+GM:RegisterChatType("Yell", {
+	prefix = {"/y"},
+	canSee = 313600,
+	inCharacter = true,
+	color = Color(255, 120, 0)
+})
+
+GM:RegisterChatType("Whisper", {
+	prefix = {"/w"},
+	canSee = 4900,
+	inCharacter = true,
+	color = Color(53, 81, 92)
+})
+
+GM:RegisterChatType("OOC", {
+	prefix = {"/ooc", "//"},
+	color = Color(255, 255, 255)
+})
+
+GM:RegisterChatType("LOOC", {
+	prefix = {"/looc"},
+	canSee = 313600,
+	color = Color(255, 255, 255)
+})
