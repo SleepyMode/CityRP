@@ -57,7 +57,7 @@ end
 
 -- Loads all modules
 function LoadModules()
-	local files, folders = file.Find("cityrp/gamemode/modules/", "LUA")
+	local files, folders = file.Find("cityrp/gamemode/modules/*", "LUA")
 
 	for k, v in pairs(folders) do
 		LoadModule(v)
