@@ -9,7 +9,7 @@ GM.Inventory = {}
 Networking Receivers
 ---------------------------------------------------------------------------]]
 net.Receive("cityrp_svcl_opencharcreation", function(len)
-	createNamedMenu(net.ReadString())
+	-- TODO: Open character creation
 end)
 
 net.Receive("cityrp_svcl_notify", function(len)
