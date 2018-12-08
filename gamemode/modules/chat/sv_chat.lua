@@ -21,6 +21,7 @@ function GM:PlayerSay(sender, text, teamChat)
 
 	for k, v in pairs(receivers) do
 		net.Start("cityrp_chat")
+			net.WriteEntity(sender)
 			net.WriteString(chatType)
 			net.WriteString(msg)
 		net.Send(v)
