@@ -36,7 +36,7 @@ team.SetUp(TEAM_MAYOR,		"Mayor",			Color(150,	20,		20,		0  ))
 --[[-------------------------------------------------------------------------
 Networked variables
 ---------------------------------------------------------------------------]]
-local PLAYER.SteamName = PLAYER.SteamName or PLAYER.Name
+PLAYER.SteamName = PLAYER.SteamName or PLAYER.Name
 
 function PLAYER:HasCharacter()
 	return self:GetNW2Bool("cityrp_haschar")

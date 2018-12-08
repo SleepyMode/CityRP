@@ -132,7 +132,7 @@ net.Receive("cityrp_clsv_inventoryaction", function(len, ply)
 		if (!ply:Alive()) then
 			ply:Notify("You may not peform inventory actions whilst dead!")
 			return
-		elseif (!ply:OnGround and !ply:IsFlagSet(FL_INWATER)) then
+		elseif (!ply:OnGround() and !ply:IsFlagSet(FL_INWATER)) then
 			ply:Notify("You may not manipulate items while airborne.")
 		end
 	end
