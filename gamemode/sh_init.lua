@@ -59,7 +59,7 @@ end
 function LoadModules()
 	local files, folders = file.Find("cityrp/gamemode/modules/", "LUA")
 
-	for k, v in pairs(files) do
+	for k, v in pairs(folders) do
 		LoadModule(v)
 	end
 end
@@ -72,10 +72,4 @@ end
 LoadModule("core")
 LoadModule("database")
 LoadModule("playercore")
-LoadModule("chat")
-LoadModule("dev")
-LoadModule("inventorygui")
-LoadModule("items")
-LoadModule("playerfunctions")
-LoadModule("playergui")
 LoadModules()
