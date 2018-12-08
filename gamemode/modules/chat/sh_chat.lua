@@ -49,7 +49,7 @@ function GM:RegisterChatType(name, data)
 		end
 
 		if (type(data.onMessage) != "function") then
-			if (data.inCharacter)
+			if (data.inCharacter) then
 				data.onMessage = function(self, player, message)
 					chat.AddText(team.GetColor(player:Team()), player:Name(), self.color or Color(234, 243, 255), ": ", message)
 				end
