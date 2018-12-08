@@ -72,4 +72,9 @@ end
 LoadModule("core")
 LoadModule("database")
 LoadModule("playercore")
+LoadModule("animations")
+LoadModule("chat")
+LoadModule("items")
+LoadModule("playergui")
+
 LoadModules()
