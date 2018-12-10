@@ -52,7 +52,6 @@ end
 	Desc: A convenience function to remove ammo
 -----------------------------------------------------------]]
 function SWEP:TakeAmmo(count)
-	for k, v in pairs()
 end
 
 --[[---------------------------------------------------------
@@ -61,21 +60,12 @@ end
 -----------------------------------------------------------]]
 function SWEP:Ammo()
 	local count = 0
+	local invTable = SERVER and self.Owner.rpInventoryData or GAMEMODE.Inventory
 
-	if (CLIENT)
-		if (type(GAMEMODE.Inventory) == "table" and type(GAMEMODE.Inventory[self.MagItemID]) == "table") then
-			for k, v in pairs(GAMEMODE.Inventory[self.MagItemID]) do
-				if (type(v.data) == "table" and type(v.data.ammoCount) == "number") then
-					count = count + v.data.ammoCount
-				end
-			end
-		end
-	else
-		if (type(self.Owner.rpInventoryData) == "table" and type(self.Owner.rpInventoryData[self.MagItemID]) == "table") then
-			for k, v in pairs(self.Owner.rpInventoryData[self.MagItemID]) do
-				if (type(v.data) == "table" and type(v.data.ammoCount) == "number") then
-					count = count + v.data.ammoCount
-				end
+	if (type(invTable) == "table" and type(invTable[self.MagItemID]) == "table") then
+		for k, v in pairs(invTable[self.MagItemID]) do
+			if (type(v.data) == "table" and type(v.data.ammoCount) == "number") then
+				count = count + v.data.ammoCount
 			end
 		end
 	end
